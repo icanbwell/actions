@@ -1,0 +1,5 @@
+name: "Hello World"
+description: 'Output "Hello World" to the console'
+runs:
+  using: "node16"
+  main: "./lib/hello-world.js"

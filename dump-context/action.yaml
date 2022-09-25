@@ -1,0 +1,5 @@
+name: 'Dump Action'
+description: 'Output the current context to the console'
+runs:
+  using: 'node16'
+  main: '../lib/dump-context.js'

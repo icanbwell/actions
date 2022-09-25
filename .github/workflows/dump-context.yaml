@@ -1,0 +1,14 @@
+name: Dump Context
+
+on:
+  workflow_dispatch:
+
+jobs: 
+  dump-context:
+    runs-on: [self-hosted, main]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Dump Context
+        uses: ./dump-context

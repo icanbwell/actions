@@ -1,0 +1,14 @@
+name: Hello World
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dump-context:
+    runs-on: [self-hosted, main]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Hello World
+        uses: ./

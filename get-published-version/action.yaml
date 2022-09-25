@@ -1,0 +1,19 @@
+name: 'Get Published Package Version'
+description: 'Capture the latest published package'
+inputs:
+  auth-token:
+    description: 'Auth token'
+    required: false
+  org: 
+    description: 'Organization (NPM scope)'
+    required: false
+    default: 'icanbwell'
+  package-name:
+    description: 'Package name'
+    required: true
+outputs:
+  published-version:
+    description: 'Latest package version'
+runs:
+  using: 'node16'
+  main: '../lib/get-published-version.js'

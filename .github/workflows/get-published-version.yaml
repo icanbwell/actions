@@ -1,0 +1,20 @@
+name: Get Published Version
+
+on:
+  workflow_dispatch:
+
+jobs: 
+  get-published-version:
+    runs-on: [self-hosted, main]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get Published Version
+        id: get-published-version
+        uses: ./get-published-version
+        with:
+          auth-token: ${{secrets.BWELL_DEV_PAT}}
+          package-name: 'frontend-analytics'
+      - run: echo ${{ steps.get-published-version.outputs.published-version }}
+
