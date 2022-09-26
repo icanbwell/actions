@@ -15,6 +15,5 @@ jobs:
         uses: ./get-latest-release-tag
         with:
           auth-token: ${{secrets.BWELL_DEV_PAT}}
-          repo: 'mfe-toolkit'
       - run: echo ${{ steps.get-latest-release-tag.outputs.tag }}
 
