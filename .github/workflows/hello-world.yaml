@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  dump-context:
+  hello-world:
     runs-on: [self-hosted, main]
     steps:
       - uses: actions/checkout@v2
