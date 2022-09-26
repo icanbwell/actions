@@ -10,7 +10,7 @@ inputs:
     default: 'icanbwell'
   repo:
     description: 'Repo name'
-    required: true
+    required: false
 outputs:
   tag:
     description: 'Latest released tag'
