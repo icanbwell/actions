@@ -15,4 +15,4 @@ runs:
     - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
     - name: Dump Context
-      uses: ./dump-context
+      uses: icanbwell/actions/dump-context@main
