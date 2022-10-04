@@ -1,0 +1,29 @@
+name: Increment Version
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: 
+      - labeled
+      - unlabeled
+      - opened
+      - reopened
+      - edited
+      - synchronize
+    branches:
+      - main
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Increment Version
+        id: increment-version
+        uses: ./increment-version
+        with:
+          check-for-label-only: true
+      - run: echo ${{ steps.increment-version.outputs.release-type }}
+      - run: echo ${{ steps.increment-version.outputs.new-version }}
