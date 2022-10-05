@@ -1,0 +1,23 @@
+name: 'Increment version'
+description: |
+  Gets the release type from the PR labels and increments the last version accordingly
+inputs:
+  check-for-label-only:
+    description: 'Check for the presence of a release type label'
+    default: false
+  latest-version:
+    description: 'Lateset version'
+    required: true
+  default-release-type:
+    description: |
+      Default release type will be applied if a release type label is not selected. 
+      If this field is not configured and a release type label is not selected the action will fail.
+    required: false
+outputs:
+  release-type:
+    description: 'Release type selected from the PR labels'
+  new-version:
+    description: 'New version after semver increment'
+runs:
+  using: 'node16'
+  main: '../lib/increment-version.js'
