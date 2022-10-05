@@ -22,12 +22,14 @@ export function incrementVersion() {
         "A release type label has not been found and a default release type is not configured"
       );
     }
-    console.log({ releaseType });
-    if (!latestVersion && releaseType !== "do-not-release") {
+    console.log({ latestVersion, releaseType });
+    if (latestVersion && releaseType !== "do-not-release") {
       const cleanVersion = semver.clean(latestVersion);
       if (!cleanVersion) throw new Error(`invalid version "${latestVersion}"`);
+      const newVersion = semver.inc(cleanVersion, releaseType);
       core.setOutput("release-type", releaseType);
-      core.setOutput("new-version", semver.inc(cleanVersion, releaseType));
+      core.setOutput("new-version", newVersion);
+      console.log({ cleanVersion, releaseType, newVersion });
     }
   } catch (e) {
     core.setFailed(e.message);

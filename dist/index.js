@@ -12677,6 +12677,7 @@ function getLatestReleaseTag() {
             repo: core.getInput("repo") || github.context.payload.repository.name,
         });
         core.setOutput("tag", releases.data.tag_name);
+        console.log(JSON.stringify(releases.data, null, 2));
     });
 }
 exports.getLatestReleaseTag = getLatestReleaseTag;
@@ -12712,6 +12713,7 @@ function getPublishedVersion() {
             org: core.getInput("org"),
         });
         core.setOutput("published-version", versions.data[0].name);
+        console.log({ "published-version": versions.data[0].name });
     });
 }
 exports.getPublishedVersion = getPublishedVersion;
@@ -12739,13 +12741,15 @@ function incrementVersion() {
         if (!releaseType) {
             throw new Error("A release type label has not been found and a default release type is not configured");
         }
-        console.log({ releaseType });
-        if (!latestVersion && releaseType !== "do-not-release") {
+        console.log({ latestVersion, releaseType });
+        if (latestVersion && releaseType !== "do-not-release") {
             const cleanVersion = semver.clean(latestVersion);
             if (!cleanVersion)
                 throw new Error(`invalid version "${latestVersion}"`);
+            const newVersion = semver.inc(cleanVersion, releaseType);
             core.setOutput("release-type", releaseType);
-            core.setOutput("new-version", semver.inc(cleanVersion, releaseType));
+            core.setOutput("new-version", newVersion);
+            console.log({ cleanVersion, releaseType, newVersion });
         }
     }
     catch (e) {

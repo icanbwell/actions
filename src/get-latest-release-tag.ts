@@ -12,4 +12,5 @@ export async function getLatestReleaseTag() {
     }
   );
   core.setOutput("tag", releases.data.tag_name);
+  console.log(JSON.stringify(releases.data, null, 2));
 }

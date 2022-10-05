@@ -13,4 +13,5 @@ export async function getPublishedVersion() {
     }
   );
   core.setOutput("published-version", versions.data[0].name);
+  console.log({ "published-version": versions.data[0].name });
 }
