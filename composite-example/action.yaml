@@ -1,5 +1,5 @@
-name: Version
-description: Version
+name: Composite Example
+description: Composite Example
 inputs:
   who-to-greet: # id of input
     description: "Who to greet"

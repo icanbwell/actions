@@ -12,7 +12,9 @@ export function incrementVersion() {
     const releaseType =
       eventPayload.pull_request?.labels
         ?.find((label) =>
-          ["major", "minor", "patch"].includes(label.name.toLowerCase())
+          ["do-not-release", "major", "minor", "patch"].includes(
+            label.name.toLowerCase()
+          )
         )
         ?.name.toLowerCase() || defaultReleaseType;
     if (!releaseType) {
@@ -20,7 +22,8 @@ export function incrementVersion() {
         "A release type label has not been found and a default release type is not configured"
       );
     }
-    if (!core.getInput("check-for-label-only")) {
+    console.log({ releaseType });
+    if (!latestVersion && releaseType !== "do-not-release") {
       const cleanVersion = semver.clean(latestVersion);
       if (!cleanVersion) throw new Error(`invalid version "${latestVersion}"`);
       core.setOutput("release-type", releaseType);

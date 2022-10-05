@@ -2,12 +2,9 @@ name: "Increment version"
 description: |
   Gets the release type from the PR labels and increments the last version accordingly
 inputs:
-  check-for-label-only:
-    description: "Check for the presence of a release type label"
-    default: false
   latest-version:
     description: "Lateset version"
-    required: true
+    required: false
   default-release-type:
     description: |
       Default release type will be applied if a release type label is not selected. 

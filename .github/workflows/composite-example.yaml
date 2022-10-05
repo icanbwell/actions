@@ -1,4 +1,4 @@
-name: Version
+name: Composite Example
 
 on:
   workflow_dispatch:
@@ -10,6 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: foo
-        uses: ./version
+        uses: ./composite-example
         with:
           who-to-greet: "Mona the Octocat"

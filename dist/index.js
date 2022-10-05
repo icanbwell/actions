@@ -12634,119 +12634,6 @@ try {
 
 /***/ }),
 
-/***/ 6124:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "getLatestReleaseTag": () => (/* binding */ getLatestReleaseTag)
-/* harmony export */ });
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
-
-
-
-async function getLatestReleaseTag() {
-  const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("auth-token") || process.env.GITHUB_TOKEN;
-  const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1___default().getOctokit(token);
-  const releases = await octokit.request(
-    "GET /repos/{owner}/{repo}/releases/latest",
-    {
-      owner: _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("owner"),
-      repo: _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("repo") || (_actions_github__WEBPACK_IMPORTED_MODULE_1___default().context.payload.repository.name),
-    }
-  );
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput("tag", releases.data.tag_name);
-}
-
-
-/***/ }),
-
-/***/ 7772:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "getPublishedVersion": () => (/* binding */ getPublishedVersion)
-/* harmony export */ });
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
-
-
-
-async function getPublishedVersion() {
-  const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("auth-token") || process.env.GITHUB_TOKEN;
-  const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
-  const versions = await octokit.request(
-    "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
-    {
-      package_type: "npm",
-      package_name: _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("package-name"),
-      org: _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("org"),
-    }
-  );
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput("published-version", versions.data[0].name);
-}
-
-
-/***/ }),
-
-/***/ 2202:
-/***/ ((__unused_webpack_module, __webpack_exports__, __nccwpck_require__) => {
-
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "incrementVersion": () => (/* binding */ incrementVersion)
-/* harmony export */ });
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var semver__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(1383);
-/* harmony import */ var semver__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(semver__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(7147);
-/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__nccwpck_require__.n(fs__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-
-function incrementVersion() {
-  try {
-    const eventPayload = JSON.parse(
-      (0,fs__WEBPACK_IMPORTED_MODULE_2__.readFileSync)(process.env.GITHUB_EVENT_PATH).toString()
-    );
-    const latestVersion = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("latest-version");
-    const defaultReleaseType = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("default-release-type");
-    const releaseType =
-      eventPayload.pull_request?.labels
-        ?.find((label) =>
-          ["major", "minor", "patch"].includes(label.name.toLowerCase())
-        )
-        ?.name.toLowerCase() || defaultReleaseType;
-    if (!releaseType) {
-      throw new Error(
-        "A release type label has not been found and a default release type is not configured"
-      );
-    }
-    if (!_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("check-for-label-only")) {
-      const cleanVersion = semver__WEBPACK_IMPORTED_MODULE_1__.clean(latestVersion);
-      if (!cleanVersion) throw new Error(`invalid version "${latestVersion}"`);
-      _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput("release-type", releaseType);
-      _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput("new-version", semver__WEBPACK_IMPORTED_MODULE_1__.inc(cleanVersion, releaseType));
-    }
-  } catch (e) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(e.message);
-  }
-}
-
-
-/***/ }),
-
 /***/ 685:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -12759,6 +12646,113 @@ function dumpContext() {
     console.log(JSON.stringify(github.context, null, 2));
 }
 exports.dumpContext = dumpContext;
+
+
+/***/ }),
+
+/***/ 5124:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getLatestReleaseTag = void 0;
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438);
+function getLatestReleaseTag() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
+        const octokit = github.getOctokit(token);
+        const releases = yield octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
+            owner: core.getInput("owner"),
+            repo: core.getInput("repo") || github.context.payload.repository.name,
+        });
+        core.setOutput("tag", releases.data.tag_name);
+    });
+}
+exports.getLatestReleaseTag = getLatestReleaseTag;
+
+
+/***/ }),
+
+/***/ 47:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPublishedVersion = void 0;
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438);
+function getPublishedVersion() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
+        const octokit = github.getOctokit(token);
+        const versions = yield octokit.request("GET /orgs/{org}/packages/{package_type}/{package_name}/versions", {
+            package_type: "npm",
+            package_name: core.getInput("package-name"),
+            org: core.getInput("org"),
+        });
+        core.setOutput("published-version", versions.data[0].name);
+    });
+}
+exports.getPublishedVersion = getPublishedVersion;
+
+
+/***/ }),
+
+/***/ 1856:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.incrementVersion = void 0;
+const core = __nccwpck_require__(2186);
+const semver = __nccwpck_require__(1383);
+const fs_1 = __nccwpck_require__(7147);
+function incrementVersion() {
+    var _a, _b, _c;
+    try {
+        const eventPayload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH).toString());
+        const latestVersion = core.getInput("latest-version");
+        const defaultReleaseType = core.getInput("default-release-type");
+        const releaseType = ((_c = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.find((label) => ["do-not-release", "major", "minor", "patch"].includes(label.name.toLowerCase()))) === null || _c === void 0 ? void 0 : _c.name.toLowerCase()) || defaultReleaseType;
+        if (!releaseType) {
+            throw new Error("A release type label has not been found and a default release type is not configured");
+        }
+        console.log({ releaseType });
+        if (!latestVersion && releaseType !== "do-not-release") {
+            const cleanVersion = semver.clean(latestVersion);
+            if (!cleanVersion)
+                throw new Error(`invalid version "${latestVersion}"`);
+            core.setOutput("release-type", releaseType);
+            core.setOutput("new-version", semver.inc(cleanVersion, releaseType));
+        }
+    }
+    catch (e) {
+        core.setFailed(e.message);
+    }
+}
+exports.incrementVersion = incrementVersion;
 
 
 /***/ }),
@@ -12784,9 +12778,9 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__nccwpck_require__(685), exports);
-__exportStar(__nccwpck_require__(6124), exports);
-__exportStar(__nccwpck_require__(7772), exports);
-__exportStar(__nccwpck_require__(2202), exports);
+__exportStar(__nccwpck_require__(5124), exports);
+__exportStar(__nccwpck_require__(47), exports);
+__exportStar(__nccwpck_require__(1856), exports);
 
 
 /***/ }),
@@ -12960,46 +12954,6 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__nccwpck_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";

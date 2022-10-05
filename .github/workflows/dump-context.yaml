@@ -2,9 +2,9 @@ name: Dump Context
 
 on:
   workflow_dispatch:
-  push:
-    tags:        
-      - 'v*'
+  # push:
+  #   tags:        
+  #     - 'v*'
 
 jobs: 
   dump-context:
@@ -14,4 +14,4 @@ jobs:
         with:
           fetch-depth: 0
       - name: Dump Context
-        uses: icanbwell/actions/dump-context@typescript
+        uses: ./dump-context

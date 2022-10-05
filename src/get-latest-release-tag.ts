@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import github from "@actions/github";
+import * as github from "@actions/github";
 
 export async function getLatestReleaseTag() {
   const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;

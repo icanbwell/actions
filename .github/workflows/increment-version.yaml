@@ -23,7 +23,5 @@ jobs:
       - name: Increment Version
         id: increment-version
         uses: ./increment-version
-        with:
-          check-for-label-only: true
       - run: echo ${{ steps.increment-version.outputs.release-type }}
       - run: echo ${{ steps.increment-version.outputs.new-version }}
