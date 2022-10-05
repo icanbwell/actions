@@ -14,4 +14,4 @@ jobs:
         with:
           fetch-depth: 0
       - name: Dump Context
-        uses: ./dump-context
+        uses: icanbwell/actions/dump-context@typescript

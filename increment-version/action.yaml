@@ -1,12 +1,12 @@
-name: 'Increment version'
+name: "Increment version"
 description: |
   Gets the release type from the PR labels and increments the last version accordingly
 inputs:
   check-for-label-only:
-    description: 'Check for the presence of a release type label'
+    description: "Check for the presence of a release type label"
     default: false
   latest-version:
-    description: 'Lateset version'
+    description: "Lateset version"
     required: true
   default-release-type:
     description: |
@@ -15,9 +15,9 @@ inputs:
     required: false
 outputs:
   release-type:
-    description: 'Release type selected from the PR labels'
+    description: "Release type selected from the PR labels"
   new-version:
-    description: 'New version after semver increment'
+    description: "New version after semver increment"
 runs:
-  using: 'node16'
-  main: '../lib/increment-version.js'
+  using: "node16"
+  main: "./index.js"
