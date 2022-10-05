@@ -1,19 +1,19 @@
-name: 'Get Latest Release Tag'
-description: 'Capture the latest released tag'
+name: "Get Latest Release Tag"
+description: "Capture the latest released tag"
 inputs:
   auth-token:
-    description: 'Auth token'
+    description: "Auth token"
     required: false
-  owner: 
-    description: 'Organization'
+  owner:
+    description: "Organization"
     required: false
-    default: 'icanbwell'
+    default: "icanbwell"
   repo:
-    description: 'Repo name'
+    description: "Repo name"
     required: false
 outputs:
   tag:
-    description: 'Latest released tag'
+    description: "Latest released tag"
 runs:
-  using: 'node16'
-  main: '../lib/get-latest-release-tag.js'
+  using: "node16"
+  main: "./index.js"
