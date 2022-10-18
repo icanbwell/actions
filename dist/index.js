@@ -12698,10 +12698,14 @@ const fs_1 = __nccwpck_require__(7147);
 function incrementVersion() {
     var _a, _b, _c;
     try {
-        const eventPayload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH || '').toString());
+        const eventPayload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH || "").toString());
         const latestVersion = core_1.default.getInput("latest-version");
         const defaultReleaseType = core_1.default.getInput("default-release-type");
-        const releaseType = ((_c = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.find((label) => ["do-not-release", "major", "minor", "patch"].includes(label.name.toLowerCase()))) === null || _c === void 0 ? void 0 : _c.name.toLowerCase()) || defaultReleaseType;
+        const releaseType = ((_c = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.find((label) => {
+            const findLabel = label.name.toLowerCase();
+            console.log({ findLabel });
+            return ["do-not-release", "major", "minor", "patch"].includes(findLabel);
+        })) === null || _c === void 0 ? void 0 : _c.name.toLowerCase()) || defaultReleaseType;
         if (!releaseType) {
             throw new Error("A release type label has not been found and a default release type is not configured");
         }
@@ -12716,9 +12720,9 @@ function incrementVersion() {
             console.log({ cleanVersion, releaseType, newVersion });
         }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     catch (e) {
-        core_1.default.setFailed((e === null || e === void 0 ? void 0 : e.message) || 'unknown error');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        core_1.default.setFailed((e === null || e === void 0 ? void 0 : e.message) || "unknown error");
     }
 }
 exports.incrementVersion = incrementVersion;
