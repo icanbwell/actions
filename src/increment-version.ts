@@ -31,7 +31,9 @@ export function incrementVersion() {
       core.setOutput("new-version", newVersion);
       console.log({ cleanVersion, releaseType, newVersion });
     }
-  } catch (e: any) {
-    core.setFailed(e.message);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  catch (e: any) {
+    core.setFailed(e?.message || 'unknown error');
   }
 }

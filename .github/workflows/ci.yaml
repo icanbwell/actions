@@ -1,0 +1,35 @@
+name: CI
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
+      - unlabeled
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          always-auth: true
+          registry-url: https://npm.pkg.github.com
+          scope: '@icanbwell'
+          cache: 'yarn'
+      - name: Check PR for release type label
+        uses: icanbwell/actions/increment-version@main
+      - run: yarn install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.BWELL_DEV_PAT}}
+      - run: yarn lint

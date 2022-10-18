@@ -1,3 +1,3 @@
-const { incrementVersion } = require("../dist");
+import { incrementVersion } from "../dist";
 
 incrementVersion();
