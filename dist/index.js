@@ -12582,181 +12582,6 @@ try {
 
 /***/ }),
 
-/***/ 685:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.dumpContext = void 0;
-const github_1 = __importDefault(__nccwpck_require__(5438));
-function dumpContext() {
-    console.log(JSON.stringify(github_1.default.context, null, 2));
-}
-exports.dumpContext = dumpContext;
-
-
-/***/ }),
-
-/***/ 5124:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getLatestReleaseTag = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
-const github_1 = __importDefault(__nccwpck_require__(5438));
-function getLatestReleaseTag() {
-    var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        const token = core_1.default.getInput("auth-token") || process.env.GITHUB_TOKEN;
-        if (!token)
-            throw new Error("auth-token is a required field");
-        const octokit = github_1.default.getOctokit(token);
-        const repo = core_1.default.getInput("repo") || ((_a = github_1.default.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name);
-        if (!repo)
-            throw new Error("repo is a required field");
-        const releases = yield octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
-            owner: core_1.default.getInput("owner"),
-            repo,
-        });
-        core_1.default.setOutput("tag", releases.data.tag_name);
-        console.log(JSON.stringify(releases.data, null, 2));
-    });
-}
-exports.getLatestReleaseTag = getLatestReleaseTag;
-
-
-/***/ }),
-
-/***/ 47:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPublishedVersion = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
-const github_1 = __importDefault(__nccwpck_require__(5438));
-function getPublishedVersion() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const token = core_1.default.getInput("auth-token") || process.env.GITHUB_TOKEN;
-        if (!token)
-            throw new Error("auth-token is a required field");
-        const octokit = github_1.default.getOctokit(token);
-        const versions = yield octokit.request("GET /orgs/{org}/packages/{package_type}/{package_name}/versions", {
-            package_type: "npm",
-            package_name: core_1.default.getInput("package-name"),
-            org: core_1.default.getInput("org"),
-        });
-        core_1.default.setOutput("published-version", versions.data[0].name);
-        console.log({ "published-version": versions.data[0].name });
-    });
-}
-exports.getPublishedVersion = getPublishedVersion;
-
-
-/***/ }),
-
-/***/ 1856:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.incrementVersion = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
-const semver_1 = __importDefault(__nccwpck_require__(1383));
-const fs_1 = __nccwpck_require__(7147);
-function incrementVersion() {
-    var _a, _b, _c;
-    try {
-        const eventPayload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH || "").toString());
-        const latestVersion = core_1.default.getInput("latest-version");
-        const defaultReleaseType = core_1.default.getInput("default-release-type");
-        const releaseType = ((_c = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.find((label) => {
-            const findLabel = label.name.toLowerCase();
-            console.log({ findLabel });
-            return ["do-not-release", "major", "minor", "patch"].includes(findLabel);
-        })) === null || _c === void 0 ? void 0 : _c.name.toLowerCase()) || defaultReleaseType;
-        if (!releaseType) {
-            throw new Error("A release type label has not been found and a default release type is not configured");
-        }
-        console.log({ latestVersion, releaseType });
-        if (latestVersion && releaseType !== "do-not-release") {
-            const cleanVersion = semver_1.default.clean(latestVersion);
-            if (!cleanVersion)
-                throw new Error(`invalid version "${latestVersion}"`);
-            const newVersion = semver_1.default.inc(cleanVersion, releaseType);
-            core_1.default.setOutput("release-type", releaseType);
-            core_1.default.setOutput("new-version", newVersion);
-            console.log({ cleanVersion, releaseType, newVersion });
-        }
-    }
-    catch (e) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        core_1.default.setFailed((e === null || e === void 0 ? void 0 : e.message) || "unknown error");
-    }
-}
-exports.incrementVersion = incrementVersion;
-
-
-/***/ }),
-
-/***/ 6144:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__nccwpck_require__(685), exports);
-__exportStar(__nccwpck_require__(5124), exports);
-__exportStar(__nccwpck_require__(47), exports);
-__exportStar(__nccwpck_require__(1856), exports);
-
-
-/***/ }),
-
 /***/ 2877:
 /***/ ((module) => {
 
@@ -12910,16 +12735,153 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ }
 /******/ 
 /************************************************************************/
+/******/ /* webpack/runtime/compat get default export */
+/******/ (() => {
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__nccwpck_require__.n = (module) => {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			() => (module['default']) :
+/******/ 			() => (module);
+/******/ 		__nccwpck_require__.d(getter, { a: getter });
+/******/ 		return getter;
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__nccwpck_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
 /******/ /* webpack/runtime/compat */
 /******/ 
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 /******/ 
 /************************************************************************/
-/******/ 
-/******/ // startup
-/******/ // Load entry module and return exports
-/******/ // This entry module is referenced by other modules so it can't be inlined
-/******/ var __webpack_exports__ = __nccwpck_require__(6144);
-/******/ 
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "dm": () => (/* reexport */ dumpContext),
+  "rR": () => (/* reexport */ getLatestReleaseTag),
+  "v9": () => (/* reexport */ getPublishedVersion),
+  "hi": () => (/* reexport */ incrementVersion)
+});
+
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5438);
+var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
+;// CONCATENATED MODULE: ./src/dump-context.ts
+
+function dumpContext() {
+    console.log(JSON.stringify((github_default()).context, null, 2));
+}
+
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
+;// CONCATENATED MODULE: ./src/get-latest-release-tag.ts
+
+
+async function getLatestReleaseTag() {
+    const token = core_default().getInput("auth-token") || process.env.GITHUB_TOKEN;
+    if (!token)
+        throw new Error("auth-token is a required field");
+    const octokit = github_default().getOctokit(token);
+    const repo = core_default().getInput("repo") || (github_default()).context.payload.repository.name;
+    if (!repo)
+        throw new Error("repo is a required field");
+    const releases = await octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
+        owner: core_default().getInput("owner"),
+        repo,
+    });
+    core_default().setOutput("tag", releases.data.tag_name);
+    console.log(JSON.stringify(releases.data, null, 2));
+}
+
+;// CONCATENATED MODULE: ./src/get-published-version.ts
+
+
+async function getPublishedVersion() {
+    const token = core_default().getInput("auth-token") || process.env.GITHUB_TOKEN;
+    if (!token)
+        throw new Error("auth-token is a required field");
+    const octokit = github_default().getOctokit(token);
+    const versions = await octokit.request("GET /orgs/{org}/packages/{package_type}/{package_name}/versions", {
+        package_type: "npm",
+        package_name: core_default().getInput("package-name"),
+        org: core_default().getInput("org"),
+    });
+    core_default().setOutput("published-version", versions.data[0].name);
+    console.log({ "published-version": versions.data[0].name });
+}
+
+// EXTERNAL MODULE: ./node_modules/semver/index.js
+var semver = __nccwpck_require__(1383);
+var semver_default = /*#__PURE__*/__nccwpck_require__.n(semver);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
+;// CONCATENATED MODULE: ./src/increment-version.ts
+
+
+
+function incrementVersion() {
+    try {
+        const eventPayload = JSON.parse((0,external_fs_.readFileSync)(process.env.GITHUB_EVENT_PATH || "").toString());
+        const latestVersion = core_default().getInput("latest-version");
+        const defaultReleaseType = core_default().getInput("default-release-type");
+        const releaseType = eventPayload.pull_request?.labels
+            ?.find((label) => {
+            const findLabel = label.name.toLowerCase();
+            console.log({ findLabel });
+            return ["do-not-release", "major", "minor", "patch"].includes(findLabel);
+        })
+            ?.name.toLowerCase() || defaultReleaseType;
+        if (!releaseType) {
+            throw new Error("A release type label has not been found and a default release type is not configured");
+        }
+        console.log({ latestVersion, releaseType });
+        if (latestVersion && releaseType !== "do-not-release") {
+            const cleanVersion = semver_default().clean(latestVersion);
+            if (!cleanVersion)
+                throw new Error(`invalid version "${latestVersion}"`);
+            const newVersion = semver_default().inc(cleanVersion, releaseType);
+            core_default().setOutput("release-type", releaseType);
+            core_default().setOutput("new-version", newVersion);
+            console.log({ cleanVersion, releaseType, newVersion });
+        }
+    }
+    catch (e) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        core_default().setFailed(e?.message || "unknown error");
+    }
+}
+
+;// CONCATENATED MODULE: ./src/index.ts
+
+
+
+
+
+})();
+
+var __webpack_exports__dumpContext = __webpack_exports__.dm;
+var __webpack_exports__getLatestReleaseTag = __webpack_exports__.rR;
+var __webpack_exports__getPublishedVersion = __webpack_exports__.v9;
+var __webpack_exports__incrementVersion = __webpack_exports__.hi;
+export { __webpack_exports__dumpContext as dumpContext, __webpack_exports__getLatestReleaseTag as getLatestReleaseTag, __webpack_exports__getPublishedVersion as getPublishedVersion, __webpack_exports__incrementVersion as incrementVersion };
 
 //# sourceMappingURL=index.js.map
