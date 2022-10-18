@@ -17,4 +17,4 @@ outputs:
     description: "New version after semver increment"
 runs:
   using: "node16"
-  main: "./index.mjs"
+  main: "./index.js"

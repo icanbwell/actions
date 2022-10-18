@@ -1,3 +1,3 @@
-import { getLatestReleaseTag } from "../dist/index.js";
+const { getLatestReleaseTag } = require("../dist");
 
 getLatestReleaseTag();

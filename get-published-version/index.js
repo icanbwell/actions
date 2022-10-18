@@ -1,3 +1,3 @@
-import { getPublishedVersion } from "../dist/index.js";
+const { getPublishedVersion } = require("../dist");
 
 getPublishedVersion();
