@@ -1,3 +1,3 @@
-import { incrementVersion } from "../dist";
+import { incrementVersion } from "../dist/index";
 
 incrementVersion();

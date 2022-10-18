@@ -1,3 +1,3 @@
-import { getPublishedVersion } from "../dist";
+import { getPublishedVersion } from "../dist/index";
 
 getPublishedVersion();
