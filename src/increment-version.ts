@@ -13,7 +13,7 @@ export function incrementVersion() {
       eventPayload.pull_request?.labels
         ?.find((label: { name: string }) => {
           const findLabel = label.name.toLowerCase();
-          console.log({findLabel})
+          console.log({ findLabel });
           return ["do-not-release", "major", "minor", "patch"].includes(
             findLabel
           );
@@ -33,8 +33,7 @@ export function incrementVersion() {
       core.setOutput("new-version", newVersion);
       console.log({ cleanVersion, releaseType, newVersion });
     }
-  } catch (e: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    core.setFailed(e?.message || "unknown error");
+  } catch (e: unknown) {
+    core.setFailed((e as Error)?.message || "unknown error");
   }
 }

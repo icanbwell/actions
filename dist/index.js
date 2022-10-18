@@ -12699,7 +12699,6 @@ function incrementVersion() {
         }
     }
     catch (e) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         core_1.default.setFailed(e?.message || "unknown error");
     }
 }
