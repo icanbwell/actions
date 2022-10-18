@@ -1,3 +1,3 @@
-import { getLatestReleaseTag } from "../dist/index";
+import { getLatestReleaseTag } from "../dist/index.js";
 
 getLatestReleaseTag();

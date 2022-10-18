@@ -1,3 +1,3 @@
-import { getPublishedVersion } from "../dist/index";
+import { getPublishedVersion } from "../dist/index.js";
 
 getPublishedVersion();

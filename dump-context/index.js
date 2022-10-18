@@ -1,3 +1,3 @@
-import { dumpContext } from '../dist/index';
+import { dumpContext } from '../dist/index.js';
 
 dumpContext();
