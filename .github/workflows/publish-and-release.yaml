@@ -1,0 +1,40 @@
+name: 'Publish and release MFE'
+description: 'Publish an MFE to the package registry and create a corresponding Github release'
+inputs:
+  auth-token:
+    description: 'The token used for auth with the package registry'
+    required: true
+  scope:
+    description: 'The scope to use with the package registry'
+    required: false
+  version-prefix:
+    description: 'A prefix that will be prepended to the version.  E.g. in v1.0.0 the prefix is "v"'
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    # - uses: actions/checkout@v3
+    # - uses: actions/setup-node@v1
+    #   with:
+    #     always-auth: true
+    #     node-version: 16.x
+    #     registry-url: https://npm.pkg.github.com
+    #     scope: ${{ inputs.scope }}
+    - id: publish
+      # this will only run if the PR has been merged and will not run if the PR was closed without being merged
+      # if: github.event.pull_request.merged == true
+      run: echo ACTION_PATH is ${{ github.action_path }}
+      shell: bash
+    #   run: ${{ github.action_path }}/../../publish/entrypoint.sh
+    #   shell: bash
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ inputs.auth-token }}
+    #     PREFIX: ${{ inputs.version-prefix }}
+    # - id: release
+    #   # this will only run if the PR has been merged and will not run if the PR was closed without being merged
+    #   if: github.event.pull_request.merged == true
+    #   uses: ncipollo/release-action@v1
+    #   with:
+    #     generateReleaseNotes: true
+    #     tag: ${{ steps.publish.outputs.version }}
