@@ -1,0 +1,17 @@
+name: Publish and release MFE
+
+on:
+  workflow_dispatch:
+    branches:
+      - main
+
+jobs:
+  increment-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Publish and release MFE
+        id: publish-and-release-mfe
+        uses: ./publish-and-release-mfe
