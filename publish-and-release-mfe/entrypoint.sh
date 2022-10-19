@@ -4,3 +4,5 @@
 # echo "::set-output name=version::$version"
 
 # yarn install --frozen-lockfile && yarn publish
+
+echo IN THE SHELL SCRIPT

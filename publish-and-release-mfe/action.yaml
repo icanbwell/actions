@@ -24,7 +24,7 @@ runs:
     - id: publish
       # this will only run if the PR has been merged and will not run if the PR was closed without being merged
       # if: github.event.pull_request.merged == true
-      run: echo ACTION_PATH is ${{ github.action_path }}
+      run: ${{ github.action_path }}/entrypoint.sh
       shell: bash
     #   run: ${{ github.action_path }}/../../publish/entrypoint.sh
     #   shell: bash
