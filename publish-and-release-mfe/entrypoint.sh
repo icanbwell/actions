@@ -5,4 +5,4 @@
 
 # yarn install --frozen-lockfile && yarn publish
 
-echo IN THE SHELL SCRIPT
+echo "::set-output name=result::'IN THE SHELL SCRIPT'"
