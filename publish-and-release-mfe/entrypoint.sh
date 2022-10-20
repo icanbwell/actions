@@ -5,5 +5,6 @@ version=$PREFIX$(jq .version package.json | sed 's/"//g')
 
 # yarn install --frozen-lockfile && yarn publish
 
+echo "::debug::version is $version"
 echo "result=IN THE SHELL SCRIPT" >> $GITHUB_OUTPUT
 echo "version=$version" >> $GITHUB_OUTPUT
