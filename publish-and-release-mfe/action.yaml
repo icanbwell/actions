@@ -11,6 +11,8 @@ inputs:
     description: 'A prefix that will be prepended to the version.  E.g. in v1.0.0 the prefix is "v"'
     required: false
     default: ''
+outputs:
+  version: ${{ env.version }}
 runs:
   using: 'composite'
   steps:
