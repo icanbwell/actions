@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=$PREFIX$(jq .version package.json | sed 's/"//g')
+version=1.0.0
 # echo "::set-output name=version::$version"
 
 # yarn install --frozen-lockfile && yarn publish
