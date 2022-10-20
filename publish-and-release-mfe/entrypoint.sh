@@ -5,4 +5,4 @@
 
 # yarn install --frozen-lockfile && yarn publish
 
-echo "::set-output name=result::'IN THE SHELL SCRIPT'"
+echo "result=IN THE SHELL SCRIPT" >> $GITHUB_ENV
