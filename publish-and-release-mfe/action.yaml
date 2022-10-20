@@ -12,7 +12,8 @@ inputs:
     required: false
     default: ''
 outputs:
-  version: ${{ env.version }}
+  version:
+    value: ${{ env.version }}
 runs:
   using: 'composite'
   steps:
