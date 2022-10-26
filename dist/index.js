@@ -12635,18 +12635,15 @@ try {
 /***/ }),
 
 /***/ 685:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.dumpContext = void 0;
-const github_1 = __importDefault(__nccwpck_require__(5438));
+const github = __nccwpck_require__(5438);
 function dumpContext() {
-    console.log(JSON.stringify(github_1.default.context, null, 2));
+    console.log(JSON.stringify(github.context, null, 2));
 }
 exports.dumpContext = dumpContext;
 
@@ -12667,28 +12664,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getLatestReleaseTag = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
-const github_1 = __importDefault(__nccwpck_require__(5438));
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438);
 function getLatestReleaseTag() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        const token = core_1.default.getInput("auth-token") || process.env.GITHUB_TOKEN;
+        const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
         if (!token)
             throw new Error("auth-token is a required field");
-        const octokit = github_1.default.getOctokit(token);
-        const repo = core_1.default.getInput("repo") || ((_a = github_1.default.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name);
+        const octokit = github.getOctokit(token);
+        const repo = core.getInput("repo") || ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name);
         if (!repo)
             throw new Error("repo is a required field");
         const releases = yield octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
-            owner: core_1.default.getInput("owner"),
+            owner: core.getInput("owner"),
             repo,
         });
-        core_1.default.setOutput("tag", releases.data.tag_name);
+        core.setOutput("tag", releases.data.tag_name);
         console.log(JSON.stringify(releases.data, null, 2));
     });
 }
@@ -12711,25 +12705,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPublishedVersion = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
-const github_1 = __importDefault(__nccwpck_require__(5438));
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438);
 function getPublishedVersion() {
     return __awaiter(this, void 0, void 0, function* () {
-        const token = core_1.default.getInput("auth-token") || process.env.GITHUB_TOKEN;
+        const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
         if (!token)
             throw new Error("auth-token is a required field");
-        const octokit = github_1.default.getOctokit(token);
+        const octokit = github.getOctokit(token);
         const versions = yield octokit.request("GET /orgs/{org}/packages/{package_type}/{package_name}/versions", {
             package_type: "npm",
-            package_name: core_1.default.getInput("package-name"),
-            org: core_1.default.getInput("org"),
+            package_name: core.getInput("package-name"),
+            org: core.getInput("org"),
         });
-        core_1.default.setOutput("published-version", versions.data[0].name);
+        core.setOutput("published-version", versions.data[0].name);
         console.log({ "published-version": versions.data[0].name });
     });
 }
@@ -12738,25 +12729,37 @@ exports.getPublishedVersion = getPublishedVersion;
 
 /***/ }),
 
-/***/ 1856:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ 562:
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.helloWorld = void 0;
+function helloWorld() {
+    console.log("hello world");
+}
+exports.helloWorld = helloWorld;
+
+
+/***/ }),
+
+/***/ 1856:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.incrementVersion = void 0;
-const core_1 = __importDefault(__nccwpck_require__(2186));
-const semver_1 = __importDefault(__nccwpck_require__(1383));
+const core = __nccwpck_require__(2186);
+const semver = __nccwpck_require__(1383);
 const fs_1 = __nccwpck_require__(7147);
 function incrementVersion() {
     var _a, _b, _c;
     try {
         const eventPayload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH || "").toString());
-        const latestVersion = core_1.default.getInput("latest-version");
-        const defaultReleaseType = core_1.default.getInput("default-release-type");
+        const latestVersion = core.getInput("latest-version");
+        const defaultReleaseType = core.getInput("default-release-type");
         const releaseType = ((_c = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.find((label) => {
             const findLabel = label.name.toLowerCase();
             console.log({ findLabel });
@@ -12767,17 +12770,17 @@ function incrementVersion() {
         }
         console.log({ latestVersion, releaseType });
         if (latestVersion && releaseType !== "do-not-release") {
-            const cleanVersion = semver_1.default.clean(latestVersion);
+            const cleanVersion = semver.clean(latestVersion);
             if (!cleanVersion)
                 throw new Error(`invalid version "${latestVersion}"`);
-            const newVersion = semver_1.default.inc(cleanVersion, releaseType);
-            core_1.default.setOutput("release-type", releaseType);
-            core_1.default.setOutput("new-version", newVersion);
+            const newVersion = semver.inc(cleanVersion, releaseType);
+            core.setOutput("release-type", releaseType);
+            core.setOutput("new-version", newVersion);
             console.log({ cleanVersion, releaseType, newVersion });
         }
     }
     catch (e) {
-        core_1.default.setFailed((e === null || e === void 0 ? void 0 : e.message) || "unknown error");
+        core.setFailed((e === null || e === void 0 ? void 0 : e.message) || "unknown error");
     }
 }
 exports.incrementVersion = incrementVersion;
@@ -12809,6 +12812,7 @@ __exportStar(__nccwpck_require__(685), exports);
 __exportStar(__nccwpck_require__(5124), exports);
 __exportStar(__nccwpck_require__(47), exports);
 __exportStar(__nccwpck_require__(1856), exports);
+__exportStar(__nccwpck_require__(562), exports);
 
 
 /***/ }),

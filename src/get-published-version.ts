@@ -1,5 +1,5 @@
-import core from "@actions/core";
-import github from "@actions/github";
+import * as core from "@actions/core";
+import * as github from "@actions/github";
 
 export async function getPublishedVersion() {
   const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;

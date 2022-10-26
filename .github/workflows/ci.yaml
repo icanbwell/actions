@@ -28,7 +28,7 @@ jobs:
           scope: '@icanbwell'
           cache: 'yarn'
       - name: Check PR for release type label
-        uses: icanbwell/actions/increment-version@try-this
+        uses: icanbwell/actions/increment-version@main
       - run: yarn install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{secrets.BWELL_DEV_PAT}}
