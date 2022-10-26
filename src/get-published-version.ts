@@ -3,6 +3,7 @@ import * as github from "@actions/github";
 
 export async function getPublishedVersion() {
   const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
+  if (!token) throw new Error("auth-token is a required field");
   const octokit = github.getOctokit(token);
   const versions = await octokit.request(
     "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",

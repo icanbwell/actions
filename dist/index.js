@@ -12669,12 +12669,18 @@ exports.getLatestReleaseTag = void 0;
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 function getLatestReleaseTag() {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
+        if (!token)
+            throw new Error("auth-token is a required field");
         const octokit = github.getOctokit(token);
+        const repo = core.getInput("repo") || ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name);
+        if (!repo)
+            throw new Error("repo is a required field");
         const releases = yield octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
             owner: core.getInput("owner"),
-            repo: core.getInput("repo") || github.context.payload.repository.name,
+            repo,
         });
         core.setOutput("tag", releases.data.tag_name);
         console.log(JSON.stringify(releases.data, null, 2));
@@ -12706,6 +12712,8 @@ const github = __nccwpck_require__(5438);
 function getPublishedVersion() {
     return __awaiter(this, void 0, void 0, function* () {
         const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
+        if (!token)
+            throw new Error("auth-token is a required field");
         const octokit = github.getOctokit(token);
         const versions = yield octokit.request("GET /orgs/{org}/packages/{package_type}/{package_name}/versions", {
             package_type: "npm",
@@ -12717,6 +12725,21 @@ function getPublishedVersion() {
     });
 }
 exports.getPublishedVersion = getPublishedVersion;
+
+
+/***/ }),
+
+/***/ 562:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.helloWorld = void 0;
+function helloWorld() {
+    console.log("hello world");
+}
+exports.helloWorld = helloWorld;
 
 
 /***/ }),
@@ -12734,10 +12757,14 @@ const fs_1 = __nccwpck_require__(7147);
 function incrementVersion() {
     var _a, _b, _c;
     try {
-        const eventPayload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH).toString());
+        const eventPayload = JSON.parse((0, fs_1.readFileSync)(process.env.GITHUB_EVENT_PATH || "").toString());
         const latestVersion = core.getInput("latest-version");
         const defaultReleaseType = core.getInput("default-release-type");
-        const releaseType = ((_c = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.find((label) => ["do-not-release", "major", "minor", "patch"].includes(label.name.toLowerCase()))) === null || _c === void 0 ? void 0 : _c.name.toLowerCase()) || defaultReleaseType;
+        const releaseType = ((_c = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.find((label) => {
+            const findLabel = label.name.toLowerCase();
+            console.log({ findLabel });
+            return ["do-not-release", "major", "minor", "patch"].includes(findLabel);
+        })) === null || _c === void 0 ? void 0 : _c.name.toLowerCase()) || defaultReleaseType;
         if (!releaseType) {
             throw new Error("A release type label has not been found and a default release type is not configured");
         }
@@ -12753,7 +12780,7 @@ function incrementVersion() {
         }
     }
     catch (e) {
-        core.setFailed(e.message);
+        core.setFailed((e === null || e === void 0 ? void 0 : e.message) || "unknown error");
     }
 }
 exports.incrementVersion = incrementVersion;
@@ -12785,6 +12812,7 @@ __exportStar(__nccwpck_require__(685), exports);
 __exportStar(__nccwpck_require__(5124), exports);
 __exportStar(__nccwpck_require__(47), exports);
 __exportStar(__nccwpck_require__(1856), exports);
+__exportStar(__nccwpck_require__(562), exports);
 
 
 /***/ }),

@@ -1,0 +1,6 @@
+name: "Hello World"
+description: |
+  Hello World
+runs:
+  using: "node16"
+  main: "./index.js"
