@@ -12634,6 +12634,38 @@ try {
 
 /***/ }),
 
+/***/ 8853:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createPackageVersionBadge = void 0;
+function createPackageVersionBadge({ packageName, version }) {
+    return `
+<svg xmlns="http://www.w3.org/2000/svg" width="145" height="20">
+    <linearGradient id="a" x2="0" y2="100%">
+        <stop offset="0" stop-color="#bbb" stop-opacity=".1" />
+        <stop offset="1" stop-opacity=".1" />
+    </linearGradient>
+    <rect rx="3" width="145" height="20" fill="#555" />
+    <rect rx="3" x="68" width="77" height="20" fill="#4c1" />
+    <path fill="#4c1" d="M68 0h4v20h-4z" />
+    <rect rx="3" width="145" height="20" fill="url(#a)" />
+    <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="11">
+        <text x="35" y="15" fill="#010101" fill-opacity=".3">${packageName}</text>
+        <text x="35" y="14">${packageName}</text>
+        <text x="105.5" y="15" fill="#010101" fill-opacity=".3">${version}</text>
+        <text x="105.5" y="14">${version}</text>
+    </g>
+</svg>
+  `;
+}
+exports.createPackageVersionBadge = createPackageVersionBadge;
+
+
+/***/ }),
+
 /***/ 685:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -12813,6 +12845,7 @@ __exportStar(__nccwpck_require__(5124), exports);
 __exportStar(__nccwpck_require__(47), exports);
 __exportStar(__nccwpck_require__(1856), exports);
 __exportStar(__nccwpck_require__(562), exports);
+__exportStar(__nccwpck_require__(8853), exports);
 
 
 /***/ }),
