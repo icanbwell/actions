@@ -1,7 +1,7 @@
 {
   "scripts": {
     "build": "ncc build ./src/index.ts --source-map",
-    "lint": "eslint --ext .js,.ts ./src"
+    "lint": "eslint"
   },
   "dependencies": {
     "@actions/core": "^1.9.1",
