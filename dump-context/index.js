@@ -1,3 +1,3 @@
-const { dumpContext } = require('../dist');
+import { dumpContext } from '../dist/index.js';
 
 dumpContext();

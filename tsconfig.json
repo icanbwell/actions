@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
-    "sourceMap": true
+    "module": "nodenext",
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules"]
 }

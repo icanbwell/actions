@@ -32,6 +32,16 @@ export function incrementVersion() {
       console.log({ cleanVersion, releaseType, newVersion });
     }
   } catch (e) {
+<<<<<<< Updated upstream
     core.setFailed(e.message);
+=======
+    let msg = 'unknown error';
+    if (typeof e === 'string') {
+        msg = e;
+    } else if (e instanceof Error) {
+        msg = e.message;
+    }
+    core.setFailed(msg);
+>>>>>>> Stashed changes
   }
 }

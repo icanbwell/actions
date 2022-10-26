@@ -1,6 +1,12 @@
 {
+  "type": "module",
   "scripts": {
+<<<<<<< Updated upstream
     "build": "ncc build ./src/index.ts --source-map"
+=======
+    "build": "ncc build ./src/index.ts --source-map",
+    "lint": "eslint"
+>>>>>>> Stashed changes
   },
   "dependencies": {
     "@actions/core": "^1.9.1",
