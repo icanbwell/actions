@@ -1,0 +1,12 @@
+name: "Make badges for markdown"
+description: "Parse markdown files and make badges"
+inputs:
+  # auth-token:
+  #   description: "Auth token"
+  #   required: false
+  markdown:
+    description: "Markdown files"
+    required: true
+runs:
+  using: "node16"
+  main: "./index.js"
