@@ -1,10 +1,17 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-export async function getPublishedVersion({
-  token = core.getInput("auth-token") || process.env.GITHUB_TOKEN,
-  packageName = core.getInput("package-name"),
-}) {
+type GetPublishedVersionArgs = {
+  token?: string;
+  packageName?: string;
+};
+export async function getPublishedVersion(
+  args: GetPublishedVersionArgs | undefined
+) {
+  const token =
+    args?.token || core.getInput("auth-token") || process.env.GITHUB_TOKEN;
+  const packageName = args?.packageName || core.getInput("package-name");
+  console.log({ token });
   if (!token) throw new Error("auth-token is a required field");
   const octokit = github.getOctokit(token);
   const versions = await octokit.request(

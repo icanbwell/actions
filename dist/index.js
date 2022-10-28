@@ -14534,8 +14534,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPublishedVersion = void 0;
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
-function getPublishedVersion({ token = core.getInput("auth-token") || process.env.GITHUB_TOKEN, packageName = core.getInput("package-name"), }) {
+function getPublishedVersion(args) {
     return __awaiter(this, void 0, void 0, function* () {
+        const token = (args === null || args === void 0 ? void 0 : args.token) || core.getInput("auth-token") || process.env.GITHUB_TOKEN;
+        const packageName = (args === null || args === void 0 ? void 0 : args.packageName) || core.getInput("package-name");
+        console.log({ token });
         if (!token)
             throw new Error("auth-token is a required field");
         const octokit = github.getOctokit(token);
