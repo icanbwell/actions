@@ -12692,25 +12692,32 @@ try {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createBadgesFromMarkdown = exports.createBadge = void 0;
+exports.createBadge = exports.createBadgesFromMarkdown = void 0;
 const tiny_badge_maker_1 = __nccwpck_require__(3543);
-const utils_1 = __nccwpck_require__(1314);
+// import { processLineByLine } from "./utils";
+const createBadgesFromMarkdown = (...files) => {
+    debugger;
+    files.forEach((file) => {
+        // processLineByLine({
+        //   file,
+        //   callback: (line: string) => {
+        //     for (const match of line.matchAll(/!\[.+\]\((.+)\)\]/g)) {
+        //       console.log(match);
+        //       debugger
+        //     }
+        //   },
+        // });
+    });
+    // eslint-disable-next-line no-console
+    // console.log(/!\[.+\]\((.+)\)\]/.test('![foo](.badge/prefix-badgetype.svn'))
+    // const url = new URL('');
+    // url.searchParams.entries()
+};
+exports.createBadgesFromMarkdown = createBadgesFromMarkdown;
 function createBadge(props) {
     return (0, tiny_badge_maker_1.tinyBadgeMaker)(props);
 }
 exports.createBadge = createBadge;
-function createBadgesFromMarkdown(...files) {
-    files.forEach((file) => {
-        (0, utils_1.processLineByLine)({
-            file,
-            callback: (line) => {
-                const matches = line.matchAll(/\s/);
-            },
-        });
-    });
-    console.log(/!\[.+\]\((.+)\)\]/.test('![foo](.badge/prefix-badgetype.svn'));
-}
-exports.createBadgesFromMarkdown = createBadgesFromMarkdown;
 
 
 /***/ }),
@@ -12899,40 +12906,6 @@ __exportStar(__nccwpck_require__(8853), exports);
 
 /***/ }),
 
-/***/ 1314:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.processLineByLine = void 0;
-const events = __nccwpck_require__(2361);
-const fs = __nccwpck_require__(7147);
-const readline = __nccwpck_require__(4521);
-function processLineByLine({ file, callback, }) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const rl = readline.createInterface({
-            input: fs.createReadStream(file),
-            crlfDelay: Infinity,
-        });
-        rl.on("line", callback);
-        yield events.once(rl, "close");
-    });
-}
-exports.processLineByLine = processLineByLine;
-
-
-/***/ }),
-
 /***/ 2857:
 /***/ ((module) => {
 
@@ -13026,14 +12999,6 @@ module.exports = require("path");
 
 "use strict";
 module.exports = require("punycode");
-
-/***/ }),
-
-/***/ 4521:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("readline");
 
 /***/ }),
 
