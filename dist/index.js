@@ -14417,21 +14417,22 @@ const tiny_badge_maker_1 = __nccwpck_require__(3543);
 const url_1 = __nccwpck_require__(7310);
 const _1 = __nccwpck_require__(6144);
 const utils_1 = __nccwpck_require__(1314);
-const token = "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";
 const badgeTemplates = {
     version: ({ packageName }) => __awaiter(void 0, void 0, void 0, function* () {
         if (!packageName) {
-            throw new Error('packageName must be defined');
+            throw new Error("packageName must be defined");
         }
-        const version = yield (0, _1.getPublishedVersion)({ token, packageName });
+        const version = yield (0, _1.getPublishedVersion)({ packageName });
         (0, tiny_badge_maker_1.default)({ label: version, message: version });
     }),
 };
 const createBadgesFromMarkdown = (...files) => {
     files.forEach((file) => {
+        console.log({ file });
         (0, utils_1.processLineByLine)({
             file,
             callback: (line) => __awaiter(void 0, void 0, void 0, function* () {
+                console.log({ line });
                 for (const match of line.matchAll(/!\[.+\]\((\.badges.+)\)/g)) {
                     try {
                         const [file, searchparams] = match[1].split("?");
@@ -14533,10 +14534,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getPublishedVersion = void 0;
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
-function getPublishedVersion({ token, packageName } = {
-    token: core.getInput("auth-token") || process.env.GITHUB_TOKEN,
-    packageName: core.getInput("package-name"),
-}) {
+function getPublishedVersion({ token = core.getInput("auth-token") || process.env.GITHUB_TOKEN, packageName = core.getInput("package-name"), }) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!token)
             throw new Error("auth-token is a required field");
