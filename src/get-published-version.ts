@@ -11,7 +11,6 @@ export async function getPublishedVersion(
   const token =
     args?.token || core.getInput("auth-token") || process.env.GITHUB_TOKEN;
   const packageName = args?.packageName || core.getInput("package-name");
-  console.log({ token });
   if (!token) throw new Error("auth-token is a required field");
   const octokit = github.getOctokit(token);
   const versions = await octokit.request(
