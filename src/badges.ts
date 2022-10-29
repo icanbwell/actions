@@ -1,8 +1,27 @@
 import { tinyBadgeMaker } from "tiny-badge-maker";
 // import { processLineByLine } from "./utils";
 
+<<<<<<< Updated upstream
 export const createBadgesFromMarkdown = (...files: string[]) => {
   debugger;
+=======
+const badgeTemplates = {
+  ['published-version']: async ({ packageName }: { packageName: string }) => {
+    if (!packageName) {
+      throw new Error("packageName must be defined");
+    }
+    const version = await getPublishedVersion({ packageName });
+    tinyBadgeMaker({ label: 'version', message: version });
+  },
+  ['release-tag']: async () => {
+    // const tag = await getLatestReleaseTag();
+  }
+};
+
+export const createBadgesFromMarkdown = () => {
+  const files = core?.getInput("markdown").split(",");
+  console.log({files});
+>>>>>>> Stashed changes
   files.forEach((file) => {
     // processLineByLine({
     //   file,
