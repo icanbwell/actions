@@ -14413,6 +14413,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createBadge = exports.createBadgesFromMarkdown = void 0;
+const fs = __nccwpck_require__(7147);
+const core = __nccwpck_require__(2186);
 const tiny_badge_maker_1 = __nccwpck_require__(3543);
 const url_1 = __nccwpck_require__(7310);
 const _1 = __nccwpck_require__(6144);
@@ -14426,9 +14428,13 @@ const badgeTemplates = {
         (0, tiny_badge_maker_1.default)({ label: version, message: version });
     }),
 };
-const createBadgesFromMarkdown = (...files) => {
+const createBadgesFromMarkdown = () => {
+    const files = core === null || core === void 0 ? void 0 : core.getInput("markdown").split(",");
+    console.log({ files });
     files.forEach((file) => {
         console.log({ file });
+        if (!fs.existsSync(file))
+            throw `Markdown file not found: ${file}`;
         (0, utils_1.processLineByLine)({
             file,
             callback: (line) => __awaiter(void 0, void 0, void 0, function* () {

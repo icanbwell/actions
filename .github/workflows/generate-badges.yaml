@@ -14,5 +14,6 @@ jobs:
         id: badges
         uses: ./badges
         with:
-          auth-token: ${{secrets.BWELL_DEV_PAT}}
+          auth-token: ${{secrets.TEMP_DEV_PAT}}
+          markdown: README.md
 

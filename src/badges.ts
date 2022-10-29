@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as core from '@actions/core';
 import tinyBadgeMaker from "tiny-badge-maker";
 import { URLSearchParams } from "url";
 import { getPublishedVersion } from ".";
@@ -13,9 +15,12 @@ const badgeTemplates = {
   },
 };
 
-export const createBadgesFromMarkdown = (...files: string[]) => {
+export const createBadgesFromMarkdown = () => {
+  const files = core?.getInput("markdown").split(",");
+  console.log({files});
   files.forEach((file) => {
     console.log({ file });
+    if (!fs.existsSync(file)) throw `Markdown file not found: ${file}`;
     processLineByLine({
       file,
       callback: async (line: string) => {

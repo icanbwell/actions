@@ -4,6 +4,10 @@ inputs:
   auth-token:
     description: "Auth token"
     required: true
+  org:
+    description: "Organization (NPM scope)"
+    required: false
+    default: "icanbwell"
   markdown:
     description: "Markdown file"
     required: false
