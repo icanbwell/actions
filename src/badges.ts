@@ -1,12 +1,12 @@
-import { tinyBadgeMaker } from "tiny-badge-maker";
-// import { processLineByLine } from "./utils";
+import * as fs from "fs";
+import * as core from '@actions/core';
+import tinyBadgeMaker from "tiny-badge-maker";
+import { URLSearchParams } from "url";
+import { getPublishedVersion } from ".";
+import { processLineByLine } from "./utils";
 
-<<<<<<< Updated upstream
-export const createBadgesFromMarkdown = (...files: string[]) => {
-  debugger;
-=======
 const badgeTemplates = {
-  ['published-version']: async ({ packageName }: { packageName: string }) => {
+  version: async ({ packageName }: { packageName: string }) => {
     if (!packageName) {
       throw new Error("packageName must be defined");
     }
@@ -21,23 +21,31 @@ const badgeTemplates = {
 export const createBadgesFromMarkdown = () => {
   const files = core?.getInput("markdown").split(",");
   console.log({files});
->>>>>>> Stashed changes
   files.forEach((file) => {
-    // processLineByLine({
-    //   file,
-    //   callback: (line: string) => {
-    //     for (const match of line.matchAll(/!\[.+\]\((.+)\)\]/g)) {
-    //       console.log(match);
-    //       debugger
-    //     }
-    //   },
-    // });
+    console.log({ file });
+    if (!fs.existsSync(file)) throw `Markdown file not found: ${file}`;
+    processLineByLine({
+      file,
+      callback: async (line: string) => {
+        console.log({ line });
+        for (const match of line.matchAll(/!\[.+\]\((\.badges.+)\)/g)) {
+          try {
+            const [file, searchparams] = match[1].split("?");
+            const templateName = file.match(/([\w-_]+?)\.svg$/)[1];
+            const params = Object.fromEntries(
+              new URLSearchParams(searchparams).entries()
+            );
+            const template = badgeTemplates[templateName];
+            const svg = await template(params);
+            console.log({ file, templateName, params, svg });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      },
+    });
   });
-  // eslint-disable-next-line no-console
-  // console.log(/!\[.+\]\((.+)\)\]/.test('![foo](.badge/prefix-badgetype.svn'))
-  // const url = new URL('');
-  // url.searchParams.entries()
-}
+};
 
 type BadgeArgs = {
   label: string;

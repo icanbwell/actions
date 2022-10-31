@@ -1,12 +1,17 @@
-name: "Make badges for markdown"
-description: "Parse markdown files and make badges"
+name: "Markdown Badges"
+description: "Generate badges from markdown"
 inputs:
-  # auth-token:
-  #   description: "Auth token"
-  #   required: false
-  markdown:
-    description: "Markdown files"
+  auth-token:
+    description: "Auth token"
     required: true
+  org:
+    description: "Organization (NPM scope)"
+    required: false
+    default: "icanbwell"
+  markdown:
+    description: "Markdown file"
+    required: false
+    default: 'README.md'
 runs:
   using: "node16"
   main: "./index.js"
