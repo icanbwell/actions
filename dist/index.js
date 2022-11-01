@@ -14448,7 +14448,7 @@ const createBadgesFromMarkdown = () => {
                         const template = badgeTemplates[templateName];
                         const svg = yield template(params);
                         // eslint-disable-next-line no-console
-                        console.log({ file, templateName, params, svg });
+                        console.log({ file, templateName, params });
                         fs.writeFileSync(file, svg);
                     }
                     catch (e) {
