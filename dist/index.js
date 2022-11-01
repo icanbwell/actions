@@ -14425,24 +14425,21 @@ const badgeTemplates = {
             throw new Error("packageName must be defined");
         }
         const version = yield (0, _1.getPublishedVersion)({ packageName });
-        (0, tiny_badge_maker_1.default)({ label: "version", message: version });
+        return (0, tiny_badge_maker_1.default)({ label: "version", message: version });
     }),
     ["release-tag"]: ({ repo }) => __awaiter(void 0, void 0, void 0, function* () {
         const tag = yield (0, _1.getLatestReleaseTag)({ repo });
-        (0, tiny_badge_maker_1.default)({ label: "release", message: tag });
+        return (0, tiny_badge_maker_1.default)({ label: "release", message: tag });
     }),
 };
 const createBadgesFromMarkdown = () => {
     const files = core === null || core === void 0 ? void 0 : core.getInput("markdown").split(/\s/);
-    console.log({ files });
     files.forEach((file) => {
-        console.log({ file });
         if (!fs.existsSync(file))
             throw `Markdown file not found: ${file}`;
         (0, utils_1.processLineByLine)({
             file,
             callback: (line) => __awaiter(void 0, void 0, void 0, function* () {
-                console.log({ line });
                 for (const match of line.matchAll(/!\[.+\]\((\.badges.+)\)/g)) {
                     try {
                         const [file, searchparams] = match[1].split("?");
@@ -14450,10 +14447,12 @@ const createBadgesFromMarkdown = () => {
                         const params = Object.fromEntries(new url_1.URLSearchParams(searchparams).entries());
                         const template = badgeTemplates[templateName];
                         const svg = yield template(params);
+                        // eslint-disable-next-line no-console
                         console.log({ file, templateName, params, svg });
+                        fs.writeFileSync(file, svg);
                     }
                     catch (e) {
-                        console.error(e);
+                        core.setFailed((e === null || e === void 0 ? void 0 : e.message) || "unknown error");
                     }
                 }
             }),

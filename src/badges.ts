@@ -11,24 +11,21 @@ const badgeTemplates = {
       throw new Error("packageName must be defined");
     }
     const version = await getPublishedVersion({ packageName });
-    tinyBadgeMaker({ label: "version", message: version });
+    return tinyBadgeMaker({ label: "version", message: version });
   },
   ["release-tag"]: async ({ repo }: { repo: string }) => {
     const tag = await getLatestReleaseTag({ repo });
-    tinyBadgeMaker({ label: "release", message: tag });
+    return tinyBadgeMaker({ label: "release", message: tag });
   },
 };
 
 export const createBadgesFromMarkdown = () => {
   const files = core?.getInput("markdown").split(/\s/);
-  console.log({ files });
   files.forEach((file) => {
-    console.log({ file });
     if (!fs.existsSync(file)) throw `Markdown file not found: ${file}`;
     processLineByLine({
       file,
       callback: async (line: string) => {
-        console.log({ line });
         for (const match of line.matchAll(/!\[.+\]\((\.badges.+)\)/g)) {
           try {
             const [file, searchparams] = match[1].split("?");
@@ -38,9 +35,11 @@ export const createBadgesFromMarkdown = () => {
             );
             const template = badgeTemplates[templateName];
             const svg = await template(params);
+            // eslint-disable-next-line no-console
             console.log({ file, templateName, params, svg });
+            fs.writeFileSync(file, svg)
           } catch (e) {
-            console.error(e);
+            core.setFailed((e as Error)?.message || "unknown error");
           }
         }
       },
