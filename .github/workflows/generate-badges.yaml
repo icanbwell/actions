@@ -15,5 +15,17 @@ jobs:
         uses: ./badges
         with:
           auth-token: ${{secrets.TEMP_DEV_PAT}}
-          markdown: README.md
-
+          markdown: |
+            README.md
+            badges/README.md
+      - name: Push changes
+        run: |
+          git fetch
+          git config --global user.email "bwell-dev@icanbwell.com"
+          git config --global user.name "bwell-dev"
+          git remote set-url origin https://${{ secrets.TEMP_DEV_PAT }}@github.com/icanbwell/actions.git/
+          git add --all
+          git commit --allow-empty -m "chore: update badges" --no-verify
+          git push
+        env:
+          GITHUB_TOKEN: ${{secrets.TEMP_DEV_PAT}}

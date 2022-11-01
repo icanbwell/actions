@@ -1,30 +1,31 @@
 import * as fs from "fs";
-import * as core from '@actions/core';
+import * as core from "@actions/core";
 import tinyBadgeMaker from "tiny-badge-maker";
 import { URLSearchParams } from "url";
-import { getPublishedVersion } from ".";
+import { getPublishedVersion, getLatestReleaseTag } from ".";
 import { processLineByLine } from "./utils";
 
 const badgeTemplates = {
-  version: async ({ packageName }: { packageName: string }) => {
+  ["published-version"]: async ({ packageName }: { packageName: string }) => {
     if (!packageName) {
       throw new Error("packageName must be defined");
     }
     const version = await getPublishedVersion({ packageName });
-    tinyBadgeMaker({ label: version, message: version });
+    return tinyBadgeMaker({ label: "version", message: version });
+  },
+  ["release-tag"]: async ({ repo }: { repo: string }) => {
+    const tag = await getLatestReleaseTag({ repo });
+    return tinyBadgeMaker({ label: "release", message: tag });
   },
 };
 
 export const createBadgesFromMarkdown = () => {
-  const files = core?.getInput("markdown").split(",");
-  console.log({files});
+  const files = core?.getInput("markdown").split(/\s/);
   files.forEach((file) => {
-    console.log({ file });
     if (!fs.existsSync(file)) throw `Markdown file not found: ${file}`;
     processLineByLine({
       file,
       callback: async (line: string) => {
-        console.log({ line });
         for (const match of line.matchAll(/!\[.+\]\((\.badges.+)\)/g)) {
           try {
             const [file, searchparams] = match[1].split("?");
@@ -34,9 +35,11 @@ export const createBadgesFromMarkdown = () => {
             );
             const template = badgeTemplates[templateName];
             const svg = await template(params);
-            console.log({ file, templateName, params, svg });
+            // eslint-disable-next-line no-console
+            console.log({ file, templateName, params });
+            fs.writeFileSync(file, svg)
           } catch (e) {
-            console.error(e);
+            core.setFailed((e as Error)?.message || "unknown error");
           }
         }
       },

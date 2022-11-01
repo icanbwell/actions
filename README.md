@@ -1,4 +1,4 @@
 # actions
 Collection of reusable GitHub actions
 
-![Package Version](.badges/version.svg?packageName=frontend-telemetry)
+![Latest Release Tag](.badges/release-tag.svg?repo=actions)

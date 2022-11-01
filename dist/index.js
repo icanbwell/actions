@@ -14420,25 +14420,26 @@ const url_1 = __nccwpck_require__(7310);
 const _1 = __nccwpck_require__(6144);
 const utils_1 = __nccwpck_require__(1314);
 const badgeTemplates = {
-    version: ({ packageName }) => __awaiter(void 0, void 0, void 0, function* () {
+    ["published-version"]: ({ packageName }) => __awaiter(void 0, void 0, void 0, function* () {
         if (!packageName) {
             throw new Error("packageName must be defined");
         }
         const version = yield (0, _1.getPublishedVersion)({ packageName });
-        (0, tiny_badge_maker_1.default)({ label: version, message: version });
+        return (0, tiny_badge_maker_1.default)({ label: "version", message: version });
+    }),
+    ["release-tag"]: ({ repo }) => __awaiter(void 0, void 0, void 0, function* () {
+        const tag = yield (0, _1.getLatestReleaseTag)({ repo });
+        return (0, tiny_badge_maker_1.default)({ label: "release", message: tag });
     }),
 };
 const createBadgesFromMarkdown = () => {
-    const files = core === null || core === void 0 ? void 0 : core.getInput("markdown").split(",");
-    console.log({ files });
+    const files = core === null || core === void 0 ? void 0 : core.getInput("markdown").split(/\s/);
     files.forEach((file) => {
-        console.log({ file });
         if (!fs.existsSync(file))
             throw `Markdown file not found: ${file}`;
         (0, utils_1.processLineByLine)({
             file,
             callback: (line) => __awaiter(void 0, void 0, void 0, function* () {
-                console.log({ line });
                 for (const match of line.matchAll(/!\[.+\]\((\.badges.+)\)/g)) {
                     try {
                         const [file, searchparams] = match[1].split("?");
@@ -14446,10 +14447,12 @@ const createBadgesFromMarkdown = () => {
                         const params = Object.fromEntries(new url_1.URLSearchParams(searchparams).entries());
                         const template = badgeTemplates[templateName];
                         const svg = yield template(params);
-                        console.log({ file, templateName, params, svg });
+                        // eslint-disable-next-line no-console
+                        console.log({ file, templateName, params });
+                        fs.writeFileSync(file, svg);
                     }
                     catch (e) {
-                        console.error(e);
+                        core.setFailed((e === null || e === void 0 ? void 0 : e.message) || "unknown error");
                     }
                 }
             }),
@@ -14499,22 +14502,28 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getLatestReleaseTag = void 0;
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
-function getLatestReleaseTag() {
+function getLatestReleaseTag(args) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const token = core.getInput("auth-token") || process.env.GITHUB_TOKEN;
         if (!token)
             throw new Error("auth-token is a required field");
         const octokit = github.getOctokit(token);
-        const repo = core.getInput("repo") || ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name);
+        const repo = args.repo ||
+            core.getInput("repo") ||
+            ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name);
         if (!repo)
             throw new Error("repo is a required field");
         const releases = yield octokit.request("GET /repos/{owner}/{repo}/releases/latest", {
-            owner: core.getInput("owner"),
+            owner: args.org ||
+                core.getInput("owner") ||
+                core.getInput("org") ||
+                "icanbwell",
             repo,
         });
-        core.setOutput("tag", releases.data.tag_name);
-        console.log(JSON.stringify(releases.data, null, 2));
+        const { tag_name } = releases.data;
+        core.setOutput("tag", tag_name);
+        return tag_name;
     });
 }
 exports.getLatestReleaseTag = getLatestReleaseTag;
@@ -14554,7 +14563,6 @@ function getPublishedVersion(args) {
         });
         const version = versions.data[0].name;
         core.setOutput("published-version", version);
-        console.log({ "published-version": version });
         return version;
     });
 }
