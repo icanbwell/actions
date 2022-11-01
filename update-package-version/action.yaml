@@ -1,0 +1,60 @@
+name: Update the version number in package.json
+
+inputs:
+  auth-token:
+    description: The auth token
+    required: true
+  version:
+    description: The new version number that will be used for the package
+    required: true
+    type: string
+  scope:
+    description: The scope to use with the package registry
+    required: false
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    # delete all the files in the workspace in case a previous failed run left anything problematic
+    - name: Cleanup workspace
+      shell: bash
+      run: |
+        ls -la ./
+        rm -rf ${{ github.workspace}}/* || true
+        rm -rf ${{ github.workspace}}/.??* || true
+        ls -la ./
+
+    # Checkout with the given token (should be BWELL_DEV_PAT). This will cause add-and-commit to use this token which is required for it to succeed.
+    - uses: actions/checkout@v3
+      with:
+        token: ${{ inputs.auth-token }}
+    - uses: actions/setup-node@v1
+      with:
+        always-auth: true
+        node-version: 16.x
+        registry-url: https://npm.pkg.github.com
+        scope: ${{ inputs.scope }}
+
+    # git will complain if we don't set these values
+    - name: Configure git
+      run: |
+        git config user.email "none"
+        git config user.name "github actions"
+      shell: bash
+
+    # tell yarn not to commit its changes or create a tag when we run `yarn version`
+    - name: Configure yarn
+      run: yarn config set version-git-tag false
+      shell: bash
+
+    - name: Update the version in package.json to ${{ inputs.version }}
+      run: yarn version --new-version ${{ inputs.version }}
+      shell: bash
+
+    # commit the changes from `yarn version`, add the tag, and push back to Github
+    - name: Push main so the repo has the new commit and tag
+      uses: EndBug/add-and-commit@v9.1.1
+      with:
+        add: package.json
+        tag: "${{ inputs.version }}"

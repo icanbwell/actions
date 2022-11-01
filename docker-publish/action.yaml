@@ -1,0 +1,59 @@
+name: Docker to AWS ECR
+
+inputs:
+  auth-token:
+    description: The auth token
+    required: true
+  image-name:
+    description: The name of the docker image to publish
+    required: true
+    type: string
+  tag:
+    description: The tag to use
+    required: true
+    type: string
+  
+runs:
+  using: "composite"
+  # See also https://docs.docker.com/docker-hub/builds/
+  steps:
+    - name: Setup npmrc
+      shell: bash
+      run: |
+        echo "@icanbwell:registry=https://npm.pkg.github.com" >> .npmrc
+        echo "//npm.pkg.github.com/:_authToken=\${{ inputs.auth-token }}" >> .npmrc
+
+    - name: AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Build, tag, and push image to Amazon ECR
+      shell: bash
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        GIT_TAG_VERSION: ${{ inputs.tag }}
+        IMAGE_NAME: ${{ inputs.image-name }}
+        IMAGE_TAG: ${{ inputs.tag }}
+        REPOSITORY_URL: 856965016623.dkr.ecr.us-east-1.amazonaws.com
+      run: |
+        echo ECR_REGISTRY=$ECR_REGISTRY
+        echo IMAGE_TAG=$IMAGE_TAG
+        echo GIT_TAG_VERSION=$GIT_TAG_VERSION
+        docker build --no-cache -t $REPOSITORY_URL/$IMAGE_NAME:$IMAGE_TAG \
+          -t $REPOSITORY_URL/$IMAGE_NAME:latest \
+          --build-arg GIT_TAG_VERSION=$GIT_TAG_VERSION \
+          --build-arg NPM_AUTH_TOKEN=${{ inputs.auth-token }} \
+          -f Dockerfile .
+
+    - name: Build, tag, and push image to Amazon ECR part 2
+      shell: bash
+      env:
+        IMAGE_NAME: ${{ inputs.image-name }}
+        REPOSITORY_URL: 856965016623.dkr.ecr.us-east-1.amazonaws.com
+      run: |
+        docker push $REPOSITORY_URL/$IMAGE_NAME --all-tags
