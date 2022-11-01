@@ -14433,7 +14433,7 @@ const badgeTemplates = {
     }),
 };
 const createBadgesFromMarkdown = () => {
-    const files = core === null || core === void 0 ? void 0 : core.getInput("markdown").split(",");
+    const files = core === null || core === void 0 ? void 0 : core.getInput("markdown").split(/\s/);
     console.log({ files });
     files.forEach((file) => {
         console.log({ file });
