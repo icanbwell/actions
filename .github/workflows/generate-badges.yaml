@@ -26,6 +26,6 @@ jobs:
           git remote set-url origin https://${{ secrets.TEMP_DEV_PAT }}@github.com/icanbwell/actions.git/
           git add --all
           git commit --allow-empty -m "chore: update badges" --no-verify
-          git push origin main
+          git push
         env:
           GITHUB_TOKEN: ${{secrets.TEMP_DEV_PAT}}
