@@ -23,6 +23,5 @@ export async function getPublishedVersion(
   );
   const version = versions.data[0].name;
   core.setOutput("published-version", version);
-  console.log({ "published-version": version });
   return version;
 }

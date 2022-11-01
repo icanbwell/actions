@@ -1,26 +1,27 @@
 import * as fs from "fs";
-import * as core from '@actions/core';
+import * as core from "@actions/core";
 import tinyBadgeMaker from "tiny-badge-maker";
 import { URLSearchParams } from "url";
-import { getPublishedVersion } from ".";
+import { getPublishedVersion, getLatestReleaseTag } from ".";
 import { processLineByLine } from "./utils";
 
 const badgeTemplates = {
-  version: async ({ packageName }: { packageName: string }) => {
+  ["published-version"]: async ({ packageName }: { packageName: string }) => {
     if (!packageName) {
       throw new Error("packageName must be defined");
     }
     const version = await getPublishedVersion({ packageName });
-    tinyBadgeMaker({ label: 'version', message: version });
+    tinyBadgeMaker({ label: "version", message: version });
   },
-  ['release-tag']: async () => {
-    // const tag = await getLatestReleaseTag();
-  }
+  ["release-tag"]: async ({ repo }: { repo: string }) => {
+    const tag = await getLatestReleaseTag({ repo });
+    tinyBadgeMaker({ label: "release", message: tag });
+  },
 };
 
 export const createBadgesFromMarkdown = () => {
   const files = core?.getInput("markdown").split(",");
-  console.log({files});
+  console.log({ files });
   files.forEach((file) => {
     console.log({ file });
     if (!fs.existsSync(file)) throw `Markdown file not found: ${file}`;
