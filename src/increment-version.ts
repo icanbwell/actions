@@ -9,8 +9,19 @@ export function incrementVersion() {
     );
     const latestVersion = core.getInput("latest-version");
     const defaultReleaseType = core.getInput("default-release-type");
+    const releaseTypes = ["do-not-release", "major", "minor", "patch"];
+    const releaseTypeLabels = eventPayload.pull_request?.labels?.filter(
+      (label) => releaseTypes.includes(label.name.toLowerCase())
+    ) || [];
+
+    if (releaseTypeLabels.length > 1) {
+      throw new Error(
+        "More than one release type label was provided.  Please indicate the release type by using only one label."
+      );
+    }
+
     const releaseType =
-      eventPayload.pull_request?.labels
+      releaseTypeLabels
         ?.find((label: { name: string }) => {
           const findLabel = label.name.toLowerCase();
           console.log({ findLabel });

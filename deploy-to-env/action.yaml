@@ -1,0 +1,50 @@
+name: Deploy a container to the specified environment
+
+inputs:
+  auth-token:
+    description: The auth token
+    required: true
+  env:
+    description: The environment to deploy to (e.g. dev, staging, prod, perf)
+    required: true
+    type: string
+  helm-chart:
+    description: The help chart to use
+    required: true
+    type: string
+  helm-chart-version:
+    description: The helm chart version to use
+    required: true
+    type: string
+  service-name:
+    description: The name of the service to deploy
+    required: true
+    type: string
+  tag:
+    description: The tag to deploy
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+  - name: Checkout icanbwell/cie.gha-deploy
+    uses: actions/checkout@v2
+    with:
+      fetch-depth: 0
+      ref: refs/tags/v0.0.6
+      repository: icanbwell/cie.gha-deploy
+      token: ${{ inputs.auth-token }}
+      path: .github/actions/cie.gha-deploy
+
+  - name: Deploy to Services
+    uses: ./.github/actions/cie.gha-deploy
+    with:
+      token: ${{ inputs.auth-token }}
+      service-name: ${{ inputs.service-name }}
+      env: ${{ inputs.env }}
+      helm-chart: ${{ inputs.helm-chart }}
+      helm-dependency-update: true
+      helm-chart-version: ${{ inputs.helm-chart-version }}
+      image-tag: ${{ inputs.tag }}
+      image-tag-value: 'bwell-app.image.tag'

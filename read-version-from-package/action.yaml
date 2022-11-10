@@ -1,0 +1,9 @@
+name: Read the version number from package.json
+description: |
+  Gets the version number from the package.json in the pull request
+outputs:
+  version:
+    description: The version number from the package.json in this pull request
+runs:
+  using: "node16"
+  main: "./index.js"
