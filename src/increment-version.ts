@@ -12,7 +12,7 @@ export function incrementVersion() {
     const releaseTypes = ["do-not-release", "major", "minor", "patch"];
     const releaseTypeLabels = eventPayload.pull_request?.labels?.filter(
       (label) => releaseTypes.includes(label.name.toLowerCase())
-    );
+    ) || [];
 
     if (releaseTypeLabels.length > 1) {
       throw new Error(

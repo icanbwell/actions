@@ -14610,7 +14610,7 @@ function incrementVersion() {
         const latestVersion = core.getInput("latest-version");
         const defaultReleaseType = core.getInput("default-release-type");
         const releaseTypes = ["do-not-release", "major", "minor", "patch"];
-        const releaseTypeLabels = (_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.filter((label) => releaseTypes.includes(label.name.toLowerCase()));
+        const releaseTypeLabels = ((_b = (_a = eventPayload.pull_request) === null || _a === void 0 ? void 0 : _a.labels) === null || _b === void 0 ? void 0 : _b.filter((label) => releaseTypes.includes(label.name.toLowerCase()))) || [];
         if (releaseTypeLabels.length > 1) {
             throw new Error("More than one release type label was provided.  Please indicate the release type by using only one label.");
         }
