@@ -42,7 +42,7 @@ runs:
     with:
       token: ${{ inputs.auth-token }}
       service-name: ${{ inputs.service-name }}
-      env: 'services'
+      env: ${{ inputs.env }}
       helm-chart: ${{ inputs.helm-chart }}
       helm-dependency-update: true
       helm-chart-version: ${{ inputs.helm-chart-version }}
