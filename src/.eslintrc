@@ -8,5 +8,6 @@
   "plugins": ["@typescript-eslint"],
   "root": true,
   "rules": {
+    "no-console": "error"
   }
 }
